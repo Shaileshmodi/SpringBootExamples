@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Scanning time -->
+<configuration debug="true" scan="true"
+	scanPeriod="10 seconds">
+	<property name="LOG_PATH" value="/apps/spring-logback" />
+	<include
+		resource="org/springframework/boot/logging/logback/base.xml" />
+
+	<!-- Enable for console output in async mode <appender name="CONSOLE" class="ch.qos.logback.classic.AsyncAppender"> 
+		<discardingThreshold>0</discardingThreshold> <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
+		<encoder> <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) 
+		%logger{36}.%M - %msg%n</pattern> </encoder> </appender> <queueSize>500</queueSize> 
+		<neverBlock>false</neverBlock> </appender> -->
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread])
+				%highlight(%-5level) %logger{36}.%M - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Enable file logging in Jason format -->
+	<!-- <appender name="fileAsyncAppender"
+		class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+
+		<appender name="SAVE-TO-FILE"
+			class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>${LOG_PATH}/logback.log</file>
+			<rollingPolicy
+				class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+
+				<fileNamePattern>logback.log.%d{yyyy-MM-dd_HH-mm}.gz
+				</fileNamePattern>
+
+				<maxHistory>1</maxHistory>
+				<totalSizeCap>10MB</totalSizeCap>
+			</rollingPolicy>
+			<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+				<jsonGeneratorDecorator
+					class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+					<defaultMask>****</defaultMask>
+				</jsonGeneratorDecorator>
+				<timeZone>UTC</timeZone>
+				<includeCallerData>true</includeCallerData>
+			</encoder>
+		</appender>
+		<queueSize>500</queueSize>
+		<neverBlock>false</neverBlock>
+	</appender> -->
+
+	<appender name="SAVE-TO-FILE"
+	class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<file>${LOG_PATH}/logback.log</file>
+	<rollingPolicy
+		class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<!--   rollover daily, If we include HH it will be hourly and MM it will be
+		on minute
+		basis-->
+		<fileNamePattern>logback.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+		<!-- keep
+		20 days worth of history capped at 2GB total size -->
+		<maxHistory>20</maxHistory>
+		<totalSizeCap>2GB</totalSizeCap>
+	</rollingPolicy>
+	<encoder>
+		<pattern>%-4relative
+			[%thread] %-5level %logger{35} - %msg%n</pattern>
+	</encoder>
+</appender> 
+
+	<root level="debug">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="SAVE-TO-FILE" />
+	</root>
+
+
+</configuration>
